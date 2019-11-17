@@ -28,11 +28,14 @@ app.post('/trips', (req, res) => {
 });
 
 app.post('/notes', (req, res) => {
-  var tripId = req.query.trip;
-  var title = req.body.title;
-  var contents = req.body.contents;
-  // add note for trip to db
-  res.end();
+  db.createNote(req.query.trip, {title: req.body.title, contents: req.body.contents})
+    .then(() => {
+      res.end();
+    })
+    .catch((err) => {
+      console.log('Error:', err);
+      res.status(500).end();
+    });
 });
 
 app.listen(3000, function() {
