@@ -27,6 +27,11 @@ function createNote(tripId, note) {
   return Trip.findByIdAndUpdate(tripId, {$push: {notes: note}}).exec();
 };
 
+function updateNote(tripId, noteId, note) {
+  return Trip.updateOne({_id: tripId, 'notes._id': noteId}, {$set: {'notes.$.contents': note.contents}}).exec();
+};
+
 module.exports.getTrips = getTrips;
 module.exports.createTrip = createTrip;
 module.exports.createNote = createNote;
+module.exports.updateNote = updateNote;

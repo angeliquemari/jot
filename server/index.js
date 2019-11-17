@@ -28,7 +28,18 @@ app.post('/trips', (req, res) => {
 });
 
 app.post('/notes', (req, res) => {
-  db.createNote(req.query.trip, {title: req.body.title, contents: req.body.contents})
+  db.createNote(req.query.trip, req.body)
+    .then(() => {
+      res.end();
+    })
+    .catch((err) => {
+      console.log('Error:', err);
+      res.status(500).end();
+    });
+});
+
+app.patch('/notes', (req, res) => {
+  db.updateNote(req.query.trip, req.query.note, req.body)
     .then(() => {
       res.end();
     })
