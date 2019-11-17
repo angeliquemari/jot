@@ -11,12 +11,12 @@ db.once('open', function() {
 const tripSchema = mongoose.Schema({
   username: String,
   tripName: String,
-  notes: Array //[ {title: String, contents: String} ]
+  notes: [ mongoose.Schema({title: String, contents: String}) ]
 }, {timestamps: true});
 const Trip = mongoose.model('Trip', tripSchema);
 
 function getTrips(user) {
-  return Trip.find(user).exec(); // todo: sort by updatedAt, return newest first
+  return Trip.find(user).sort({updatedAt: -1}).exec(); // return trips by latest updated first
 };
 
 function createTrip(trip) {
