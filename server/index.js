@@ -57,8 +57,14 @@ const server = app.listen(3000, () => {
 
 const io = require('socket.io').listen(server);
 
-io.on('connection', socket => {
-  console.log('New client connected');
+io.on('connection', (socket) => {
+  console.log('Client connected');
+
+  socket.on('update', () => {
+    console.log('Received update signal, broadcasting update signal');
+    socket.broadcast.emit('update');
+  });
+
   socket.on('disconnect', () => {
     console.log('Client disconnected');
   });

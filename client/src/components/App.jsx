@@ -6,6 +6,10 @@ import Trips from './Trips';
 import Notes from './Notes';
 import Note from './Note';
 import Test from './Test';
+const socket = io.connect('http://localhost:3000');
+socket.on('connect', () => {
+  console.log('Connected to socket');
+});
 
 export default class App extends React.Component {
   constructor(props) {
@@ -80,6 +84,7 @@ export default class App extends React.Component {
       contentType: 'application/json',
       data: JSON.stringify({contents: contents}),
       success: () => {
+        socket.emit('update');
         this.getTrips('latest');
       }
     });
@@ -106,6 +111,10 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    socket.on('update', () => {
+      console.log('Received an update signal');
+      this.getTrips();
+    });
     this.getTrips();
   }
 
