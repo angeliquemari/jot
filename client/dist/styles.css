@@ -48,4 +48,5 @@ table {
 }
 button {
 	cursor: pointer;
+  outline: none;
 }

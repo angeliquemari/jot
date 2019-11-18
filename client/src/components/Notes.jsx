@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './styles/notes.css';
 
-export default function Notes({notes, addNote, selectNote}) {
+export default function Notes({notes, addNote, selectNote, selectedNote}) {
   return (
     <div className={styles.notesContainer}>
       <div className={styles.titleSection}>
@@ -11,7 +11,9 @@ export default function Notes({notes, addNote, selectNote}) {
       {notes.map(note => {
         return (
           <div className={styles.noteContainer} key={note._id} >
-            <div className={styles.note} noteid={note._id} onClick={selectNote}>{note.title}</div>
+            <button className={styles.note} noteid={note._id} onClick={selectNote} disabled={note._id === selectedNote._id}>
+              {note.title}
+            </button>
           </div>
         );
       })}

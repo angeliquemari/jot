@@ -19,9 +19,15 @@
   padding: 5px 0px;
   width: 100%;
   border-bottom: solid #F9A03F;
-  cursor: pointer;
 }
 
-.trip {
-  cursor: inherit;
+.tripContainer button {
+  border: none;
+  font: inherit;
+  width: 100%;
+  text-align: left;
+}
+
+.tripContainer button:hover, button:disabled {
+  color: #F9A03F;
 }

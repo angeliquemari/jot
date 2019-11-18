@@ -4,6 +4,7 @@
   flex-wrap: wrap;
   flex-direction: row;
   align-items: flex-start;
+  align-content: flex-start;
 }
 
 .titleSection {
@@ -16,12 +17,15 @@
 }
 
 .noteContainer {
-  padding: 0px 5px;
-  /* width: 100%; */
-  /* border-bottom: solid #F9A03F; */
-  cursor: pointer;
+  border-right: solid #F9A03F;
+  border-bottom: solid #F9A03F;
 }
 
-.note {
-  cursor: inherit;
+.noteContainer button {
+  border: none;
+  font: inherit;
+}
+
+.noteContainer button:hover, button:disabled {
+  color: #F9A03F;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './styles/trips.css';
 
-export default function Trips({trips, addTrip, selectTrip}) {
+export default function Trips({trips, addTrip, selectTrip, selectedTrip}) {
   return (
     <div className={styles.tripsContainer}>
       <div className={styles.titleSection}>
@@ -11,9 +11,9 @@ export default function Trips({trips, addTrip, selectTrip}) {
       {trips.map(trip => {
         return (
           <div className={styles.tripContainer} key={trip._id} >
-            <div className={styles.trip} tripid={trip._id} onClick={selectTrip}>
+            <button tripid={trip._id} onClick={selectTrip} disabled={trip._id === selectedTrip._id}>
               {trip.tripName}
-            </div>
+            </button>
           </div>
         );
       })}
