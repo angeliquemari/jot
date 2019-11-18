@@ -16,6 +16,7 @@ export default class App extends React.Component {
     this.selectNote = this.selectNote.bind(this);
     this.addTrip = this.addTrip.bind(this);
     this.addNote = this.addNote.bind(this);
+    this.updateNote = this.updateNote.bind(this);
   }
 
   selectTrip(e) {
@@ -63,6 +64,20 @@ export default class App extends React.Component {
     });
   }
 
+  updateNote(e) {
+    e.preventDefault();
+    let contents = e.target.value;
+    $.ajax({
+      type: 'PATCH',
+      url: `/notes?trip=${this.state.selectedTrip._id}&note=${this.state.selectedNote._id}`,
+      contentType: 'application/json',
+      data: JSON.stringify({contents: contents}),
+      success: () => {
+        this.getTrips()
+      }
+    });
+  }
+
   getTrips() {
     $.get('/trips', (trips) => {
       this.setState({
@@ -82,7 +97,7 @@ export default class App extends React.Component {
       <div>
         <Trips trips={this.state.trips} addTrip={this.addTrip} selectTrip={this.selectTrip} />
         {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} selectNote={this.selectNote} />}
-        {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} />}
+        {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
       </div>
     );
   }

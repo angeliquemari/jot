@@ -1,10 +1,10 @@
 import React from 'react';
 
-export default function Note({note}) {
+export default function Note({note, updateNote}) {
   return (
     <div>
       <h5>Note</h5>
-      <div>{note.contents}</div>
+      <textarea value={note.contents} onChange={updateNote}></textarea>
     </div>
   );
 };
