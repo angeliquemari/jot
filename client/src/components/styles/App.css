@@ -1,3 +1,28 @@
 .mainContainer {
-  background-color: red; 
+  background-color: white;
+}
+
+.header {
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  height: 100px;
+  background-color: #F6DCB3;
+}
+
+.appTitle {
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 32px;
+  color: #F9A03F;
+}
+
+.appDescription {
+  padding-left: 20px;
+  padding-bottom: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #FC9220;
+   /* #F9A03F; */
 }
