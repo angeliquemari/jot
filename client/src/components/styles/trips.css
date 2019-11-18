@@ -12,6 +12,7 @@
 
 .addTripButton {
   float: right;
+  outline: none;
 }
 
 .tripContainer {

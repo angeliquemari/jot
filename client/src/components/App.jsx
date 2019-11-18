@@ -106,13 +106,17 @@ export default class App extends React.Component {
   render() {
     return (
       <div className={styles.mainContainer}>
-        <div className={styles.header}>
+        <div className={styles.mainHeader}>
           <div className={styles.appTitle}>jot</div>
           <div className={styles.appDescription}>Travel notes</div>
         </div>
-        <Trips trips={this.state.trips} addTrip={this.addTrip} selectTrip={this.selectTrip} />
-        {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} selectNote={this.selectNote} />}
-        {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
+        <div className={styles.mainBody}>
+          <Trips trips={this.state.trips} addTrip={this.addTrip} selectTrip={this.selectTrip} />
+          <div className={styles.rightSide}>
+            {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} selectNote={this.selectNote} />}
+            {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
+          </div>
+        </div>
       </div>
     );
   }

@@ -2,7 +2,7 @@
   background-color: white;
 }
 
-.header {
+.mainHeader {
   top: 0px;
   left: 0px;
   bottom: 0px;
@@ -22,4 +22,13 @@
   padding-left: 20px;
   padding-bottom: 20px;
   color: #FC9220;
+}
+
+.mainBody {
+  display: table;
+}
+
+.rightSide {
+  display: table-cell;
+  width: 100%;
 }

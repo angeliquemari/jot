@@ -1,0 +1,27 @@
+.notesContainer {
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.titleSection {
+  width: 100%;
+}
+
+.addNoteButton {
+  float: right;
+  outline: none;
+}
+
+.noteContainer {
+  padding: 0px 5px;
+  /* width: 100%; */
+  /* border-bottom: solid #F9A03F; */
+  cursor: pointer;
+}
+
+.note {
+  cursor: inherit;
+}
