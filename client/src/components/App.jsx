@@ -12,17 +12,43 @@ export default class App extends React.Component {
       selectedTrip: undefined,
       selectedNote: undefined
     };
+    this.selectTrip = this.selectTrip.bind(this);
     this.addTrip = this.addTrip.bind(this);
+    this.addNote = this.addNote.bind(this);
   }
 
+  selectTrip(e) {
+    e.preventDefault();
+    let tripId = e.target.getAttribute('tripid');
+    let selectedTrip = this.state.trips.filter(trip => trip._id === tripId)[0];
+    this.setState({
+      selectedTrip: selectedTrip,
+      selectedNote: (selectedTrip.notes.length) ? selectedTrip.notes[0] : undefined
+    });
+  }
+  
   addTrip(e) {
-    e.preventDefault;
+    e.preventDefault();
     let tripName = prompt('Please enter a name for your trip:');
     $.ajax({
       type: 'POST',
       url: '/trips',
       contentType: 'application/json',
       data: JSON.stringify({tripName: tripName}),
+      success: () => {
+        this.getTrips()
+      }
+    });
+  }
+
+  addNote(e) {
+    e.preventDefault();
+    let title = prompt('Please enter a title for your note:');
+    $.ajax({
+      type: 'POST',
+      url: `/notes?trip=${this.state.selectedTrip._id}`,
+      contentType: 'application/json',
+      data: JSON.stringify({title: title, contents: ''}),
       success: () => {
         this.getTrips()
       }
@@ -46,8 +72,8 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        <Trips trips={this.state.trips} addTrip={this.addTrip} />
-        {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} />}
+        <Trips trips={this.state.trips} addTrip={this.addTrip} selectTrip={this.selectTrip} />
+        {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} />}
         {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} />}
       </div>
     );
