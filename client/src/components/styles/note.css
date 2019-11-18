@@ -1,9 +1,17 @@
 .noteContainer {
   padding: 0px 20px 20px;
+  height: 100%;
+}
+
+.noteContainer textarea {
   width: 100%;
-  outline: none;
+  height: 300px;
+  resize: vertical;
+  border-radius: 2px;
+  border-color: #D4D4AA;
+  background-color: #FFF8CE;
 }
 
 .noteContainer textarea:focus {
-  outline: none;
+  outline-color: #BAD4AA;
 }

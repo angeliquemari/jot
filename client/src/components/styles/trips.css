@@ -12,11 +12,6 @@
 
 .titleSection button {
   float: right;
-  outline: none;
-}
-
-.titleSection button:focus, button:enabled {
-  outline: none;
 }
 
 .tripContainer {
