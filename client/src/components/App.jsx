@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './styles/App.css';
 import $ from 'jquery';
 import Trips from './Trips';
 import Notes from './Notes';
@@ -104,7 +105,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className={styles.mainContainer}>
         <Trips trips={this.state.trips} addTrip={this.addTrip} selectTrip={this.selectTrip} />
         {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} selectNote={this.selectNote} />}
         {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
