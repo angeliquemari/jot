@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './styles/App.css';
+import styles from './styles/app.css';
 import $ from 'jquery';
 import Trips from './Trips';
 import Notes from './Notes';
