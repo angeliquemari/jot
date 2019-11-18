@@ -5,7 +5,6 @@ import io from 'socket.io-client';
 import Trips from './Trips';
 import Notes from './Notes';
 import Note from './Note';
-import Test from './Test';
 const socket = io.connect('http://localhost:3000');
 socket.on('connect', () => {
   console.log('Connected to socket');
@@ -132,7 +131,6 @@ export default class App extends React.Component {
             {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
           </div>
         </div>
-        <Test />
       </div>
     );
   }
