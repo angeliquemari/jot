@@ -6,7 +6,7 @@ export default function Trips({trips, addTrip, selectTrip, selectedTrip}) {
     <div className={styles.tripsContainer}>
       <div className={styles.titleSection}>
         <h3>Trips</h3>
-        <button className={styles.addTripButton} onClick={addTrip}>Add</button>
+        <button onClick={addTrip}>Add</button>
       </div>
       {trips.map(trip => {
         return (
