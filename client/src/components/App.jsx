@@ -13,6 +13,7 @@ export default class App extends React.Component {
       selectedNote: undefined
     };
     this.selectTrip = this.selectTrip.bind(this);
+    this.selectNote = this.selectNote.bind(this);
     this.addTrip = this.addTrip.bind(this);
     this.addNote = this.addNote.bind(this);
   }
@@ -25,6 +26,13 @@ export default class App extends React.Component {
       selectedTrip: selectedTrip,
       selectedNote: (selectedTrip.notes.length) ? selectedTrip.notes[0] : undefined
     });
+  }
+
+  selectNote(e) {
+    e.preventDefault();
+    let noteId = e.target.getAttribute('noteid');
+    let selectedNote = this.state.selectedTrip.notes.filter(note => note._id === noteId)[0];
+    this.setState({selectedNote: selectedNote});
   }
   
   addTrip(e) {
@@ -73,7 +81,7 @@ export default class App extends React.Component {
     return (
       <div>
         <Trips trips={this.state.trips} addTrip={this.addTrip} selectTrip={this.selectTrip} />
-        {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} />}
+        {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} selectNote={this.selectNote} />}
         {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} />}
       </div>
     );

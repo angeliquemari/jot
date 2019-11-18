@@ -1,11 +1,11 @@
 import React from 'react';
 
-export default function Notes({notes, addNote}) {
+export default function Notes({notes, addNote, selectNote}) {
   return (
     <div>
-      <h3>Notes</h3>
+      <h4>Notes</h4>
       <button onClick={addNote}>Add note</button>
-      {notes.map(note => <div key={note._id}>{note.title}</div>)}
+      {notes.map(note => <div key={note._id} noteid={note._id} onClick={selectNote}>{note.title}</div>)}
     </div>
   );
 };
