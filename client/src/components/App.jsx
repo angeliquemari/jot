@@ -1,9 +1,11 @@
 import React from 'react';
 import styles from './styles/app.css';
 import $ from 'jquery';
+import io from 'socket.io-client';
 import Trips from './Trips';
 import Notes from './Notes';
 import Note from './Note';
+import Test from './Test';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -18,6 +20,7 @@ export default class App extends React.Component {
     this.addTrip = this.addTrip.bind(this);
     this.addNote = this.addNote.bind(this);
     this.updateNote = this.updateNote.bind(this);
+    this.openConnection = this.openConnection.bind(this);
   }
 
   selectTrip(e) {
@@ -103,6 +106,10 @@ export default class App extends React.Component {
     });
   }
 
+  openConnection() {
+
+  }
+
   componentDidMount() {
     this.getTrips();
   }
@@ -121,6 +128,7 @@ export default class App extends React.Component {
             {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
           </div>
         </div>
+        <Test openConnection={this.openConnection}/>
       </div>
     );
   }

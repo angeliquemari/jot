@@ -4,6 +4,7 @@ const morgan = require('morgan');
 app.use(express.static('./client/dist'));
 app.use(express.json());
 app.use(morgan('dev'));
+
 const db = require('../database/index.js');
 const USERNAME = 'angeliquemari';
 
@@ -51,6 +52,15 @@ app.patch('/notes', (req, res) => {
     });
 });
 
-app.listen(3000, function() {
+const server = app.listen(3000, () => {
   console.log('Server listening on port 3000');
+});
+
+const io = require('socket.io').listen(server);
+
+io.on('connection', socket => {
+  console.log('New client connected');
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
 });
