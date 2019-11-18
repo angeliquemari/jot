@@ -45,7 +45,7 @@ export default class App extends React.Component {
       contentType: 'application/json',
       data: JSON.stringify({tripName: tripName}),
       success: () => {
-        this.getTrips()
+        this.getTrips();
       }
     });
   }
@@ -59,7 +59,7 @@ export default class App extends React.Component {
       contentType: 'application/json',
       data: JSON.stringify({title: title, contents: ''}),
       success: () => {
-        this.getTrips()
+        this.getTrips('last');
       }
     });
   }
@@ -73,17 +73,27 @@ export default class App extends React.Component {
       contentType: 'application/json',
       data: JSON.stringify({contents: contents}),
       success: () => {
-        this.getTrips()
+        this.getTrips('latest');
       }
     });
   }
 
-  getTrips() {
+  getTrips(noteFilter = 'first') {
     $.get('/trips', (trips) => {
+      let selectedNote;
+      if (noteFilter === 'first') {
+        selectedNote = (trips.length && trips[0].notes.length) ? trips[0].notes[0] : undefined;
+      }
+      if (noteFilter === 'last') {
+        selectedNote = trips[0].notes[trips[0].notes.length - 1];
+      }
+      if (noteFilter === 'latest') {
+        selectedNote = trips[0].notes.filter(note => note._id === this.state.selectedNote._id)[0];
+      }
       this.setState({
         trips: trips,
         selectedTrip: (trips.length) ? trips[0] : undefined,
-        selectedNote: (trips.length && trips[0].notes.length) ? trips[0].notes[0] : undefined
+        selectedNote: selectedNote
       });
     });
   }
