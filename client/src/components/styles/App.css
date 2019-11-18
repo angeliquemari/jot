@@ -1,0 +1,34 @@
+.mainContainer {
+  background-color: white;
+}
+
+.mainHeader {
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  height: 100px;
+  background-color: #F6DCB3;
+}
+
+.appTitle {
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  font-size: 32px;
+  color: #FC9220;
+}
+
+.appDescription {
+  padding-left: 20px;
+  padding-bottom: 20px;
+  color: #FC9220;
+}
+
+.mainBody {
+  display: table;
+}
+
+.rightSide {
+  display: table-cell;
+  width: 100%;
+}

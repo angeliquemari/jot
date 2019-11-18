@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './styles/app.css';
 import $ from 'jquery';
 import Trips from './Trips';
 import Notes from './Notes';
@@ -39,29 +40,33 @@ export default class App extends React.Component {
   addTrip(e) {
     e.preventDefault();
     let tripName = prompt('Please enter a name for your trip:');
-    $.ajax({
-      type: 'POST',
-      url: '/trips',
-      contentType: 'application/json',
-      data: JSON.stringify({tripName: tripName}),
-      success: () => {
-        this.getTrips();
-      }
-    });
+    if (tripName) {
+      $.ajax({
+        type: 'POST',
+        url: '/trips',
+        contentType: 'application/json',
+        data: JSON.stringify({tripName: tripName}),
+        success: () => {
+          this.getTrips();
+        }
+      });
+    }
   }
 
   addNote(e) {
     e.preventDefault();
     let title = prompt('Please enter a title for your note:');
-    $.ajax({
-      type: 'POST',
-      url: `/notes?trip=${this.state.selectedTrip._id}`,
-      contentType: 'application/json',
-      data: JSON.stringify({title: title, contents: ''}),
-      success: () => {
-        this.getTrips('last');
-      }
-    });
+    if (title) {
+      $.ajax({
+        type: 'POST',
+        url: `/notes?trip=${this.state.selectedTrip._id}`,
+        contentType: 'application/json',
+        data: JSON.stringify({title: title, contents: ''}),
+        success: () => {
+          this.getTrips('last');
+        }
+      });
+    }
   }
 
   updateNote(e) {
@@ -104,10 +109,18 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <Trips trips={this.state.trips} addTrip={this.addTrip} selectTrip={this.selectTrip} />
-        {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} selectNote={this.selectNote} />}
-        {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
+      <div className={styles.mainContainer}>
+        <div className={styles.mainHeader}>
+          <div className={styles.appTitle}>jot</div>
+          <div className={styles.appDescription}>Travel notes</div>
+        </div>
+        <div className={styles.mainBody}>
+          <Trips trips={this.state.trips} addTrip={this.addTrip} selectTrip={this.selectTrip} selectedTrip={this.state.selectedTrip} />
+          <div className={styles.rightSide}>
+            {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} selectNote={this.selectNote} selectedNote={this.state.selectedNote} />}
+            {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
+          </div>
+        </div>
       </div>
     );
   }

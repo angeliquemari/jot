@@ -1,0 +1,30 @@
+.notesContainer {
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.titleSection {
+  width: 100%;
+}
+
+.titleSection button {
+  float: right;
+}
+
+.noteContainer {
+  border-right: solid #F9A03F;
+  border-bottom: solid #F9A03F;
+}
+
+.noteContainer button {
+  border: none;
+  font: inherit;
+}
+
+.noteContainer button:hover, button:disabled {
+  color: #F9A03F;
+}
