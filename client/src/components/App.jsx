@@ -20,7 +20,6 @@ export default class App extends React.Component {
     this.addTrip = this.addTrip.bind(this);
     this.addNote = this.addNote.bind(this);
     this.updateNote = this.updateNote.bind(this);
-    this.openConnection = this.openConnection.bind(this);
   }
 
   selectTrip(e) {
@@ -106,10 +105,6 @@ export default class App extends React.Component {
     });
   }
 
-  openConnection() {
-
-  }
-
   componentDidMount() {
     this.getTrips();
   }
@@ -128,7 +123,7 @@ export default class App extends React.Component {
             {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
           </div>
         </div>
-        <Test openConnection={this.openConnection}/>
+        <Test />
       </div>
     );
   }

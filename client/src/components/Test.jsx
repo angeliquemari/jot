@@ -1,7 +1,7 @@
 import React from 'react';
 import io from 'socket.io-client';
 
-export default function Test({openConnection}) {
+export default function Test() {
   let socket;
   let focusIn = () => {
     console.log('Opening socket connection');
