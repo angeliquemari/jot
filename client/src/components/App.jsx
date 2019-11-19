@@ -23,51 +23,7 @@ export default class App extends React.Component {
     this.addNote = helpers.addNote.bind(this);
     this.updateNote = helpers.updateNote.bind(this);
     this.deleteNote = helpers.deleteNote.bind(this);
-  }
-
-  getTrips(filter) {
-    // check filter valid
-    if (!['same trip, same note', 'same trip, last note', 'latest trip, first note'].includes(filter)) throw 'filter not valid';
-    if (this.state.selectedTrip === undefined) filter = 'latest trip, first note'; // handle another client adding trip
-    // get trips data to set state
-    $.get('/trips', (trips) => {
-      // set selectedTrip & selectedNote based on passed-in filter
-      let selectedTrip;
-      let selectedNote;
-      if (filter === 'same trip, same note' || filter === 'same trip, last note') {
-        let selectedTripArr = trips.filter(trip => trip._id === this.state.selectedTrip._id);
-        if (selectedTripArr.length) {
-          selectedTrip = selectedTripArr[0];
-          let selectedNoteArr;
-          if (filter === 'same trip, same note') {
-            if (this.state.selectedNote === undefined) { // handle another client adding note, or still no notes
-              filter = 'same trip, last note';
-            } else { // get same note, or handle another client deleting note
-              selectedNoteArr = (selectedTrip.notes.length) ? selectedTrip.notes.filter(note => note._id === this.state.selectedNote._id) : [];
-            }
-          }
-          if (filter === 'same trip, last note') {
-            selectedNoteArr = (selectedTrip.notes.length) ? [selectedTrip.notes[selectedTrip.notes.length - 1]] : [];
-          }
-          if (selectedNoteArr.length) {
-            selectedNote = selectedNoteArr[0];
-          } else {
-            selectedNote = undefined;
-          }
-        } else { // handle another client deleting trip
-          filter = 'latest trip, first note';
-        }
-      }
-      if (filter === 'latest trip, first note') { // default selection
-        selectedTrip = (trips.length) ? trips[0] : undefined;
-        selectedNote = (trips.length && trips[0].notes.length) ? trips[0].notes[0] : undefined;
-      }
-      this.setState({
-        trips: trips,
-        selectedTrip: selectedTrip,
-        selectedNote: selectedNote
-      });
-    });
+    this.getTrips = helpers.getTrips.bind(this);
   }
 
   componentDidMount() {

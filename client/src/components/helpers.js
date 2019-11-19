@@ -83,6 +83,58 @@ const helpers = {
         this.getTrips('same trip, last note');
       }
     });
+  },
+  getTrips: function(filter) {
+    // check filter valid
+    if (!['same trip, same note', 'same trip, last note', 'latest trip, first note'].includes(filter)) throw 'filter not valid';
+    // get trips data to set state
+    $.get('/trips', (trips) => {
+      // set selectedTrip & selectedNote based on passed-in filter
+      let selectedTrip;
+      let selectedNote;
+      if (this.state.selectedTrip === undefined) filter = 'latest trip, first note'; // handle another client adding trip
+      if (filter === 'same trip, same note' || filter === 'same trip, last note') {
+        let selectedTripArr = trips.filter(trip => trip._id === this.state.selectedTrip._id);
+        if (selectedTripArr.length) {
+          selectedTrip = selectedTripArr[0];
+          let selectedNoteArr;
+          if (filter === 'same trip, same note') {
+            if (this.state.selectedNote === undefined) {
+              filter = 'same trip, last note';
+            }
+            if (selectedTrip.notes.length) {
+              let selectedNoteArr = selectedTrip.notes.filter(note => note._id === this.state.selectedNote._id);
+              if (selectedNoteArr.length) {
+                selectedNote = selectedNoteArr[0]; // same note as before
+              } else { // handle another client deleting note
+                filter = 'same trip, last note';
+              }
+            } else { // handle another client deleting only note
+              selectedNote = undefined;
+            }
+          }
+          if (filter === 'same trip, last note') {
+            selectedNoteArr = (selectedTrip.notes.length) ? [selectedTrip.notes[selectedTrip.notes.length - 1]] : [];
+            if (selectedNoteArr.length) {
+              selectedNote = selectedNoteArr[0]; // trip's last note
+            } else {
+              selectedNote = undefined; // trip has no notes
+            }
+          }
+        } else { // handle another client deleting trip
+          filter = 'latest trip, first note';
+        }
+      }
+      if (filter === 'latest trip, first note') { // default filter
+        selectedTrip = (trips.length) ? trips[0] : undefined;
+        selectedNote = (trips.length && trips[0].notes.length) ? trips[0].notes[0] : undefined;
+      }
+      this.setState({
+        trips: trips,
+        selectedTrip: selectedTrip,
+        selectedNote: selectedNote
+      });
+    });
   }
 }
 
