@@ -1,5 +1,6 @@
 .tripsContainer {
   padding: 20px;
+  min-width: 100px;
   width: fit-content;
   display: flex;
   flex-direction: column;
