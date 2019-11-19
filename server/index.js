@@ -62,6 +62,17 @@ app.patch('/notes', (req, res) => {
     });
 });
 
+app.delete('/notes', (req, res) => {
+  db.deleteNote(req.query.trip, req.query.note)
+    .then(() => {
+      res.end();
+    })
+    .catch((err) => {
+      console.log('Error:', err);
+      res.status(500).end();
+    });
+});
+
 const server = app.listen(3000, () => {
   console.log('Server listening on port 3000');
 });

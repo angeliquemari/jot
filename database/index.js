@@ -35,8 +35,13 @@ function updateNote(tripId, noteId, note) {
   return Trip.updateOne({_id: tripId, 'notes._id': noteId}, {$set: {'notes.$.contents': note.contents}}).exec();
 };
 
+function deleteNote(tripId, noteId) {
+  return Trip.findByIdAndUpdate(tripId, {$pull: {notes: {_id: noteId}}}).exec();
+}
+
 module.exports.getTrips = getTrips;
 module.exports.createTrip = createTrip;
 module.exports.deleteTrip = deleteTrip;
 module.exports.createNote = createNote;
 module.exports.updateNote = updateNote;
+module.exports.deleteNote = deleteNote;
