@@ -21,8 +21,10 @@ export default class App extends React.Component {
     this.selectTrip = this.selectTrip.bind(this);
     this.selectNote = this.selectNote.bind(this);
     this.addTrip = this.addTrip.bind(this);
+    this.deleteTrip = this.deleteTrip.bind(this);
     this.addNote = this.addNote.bind(this);
     this.updateNote = this.updateNote.bind(this);
+    this.deleteNote = this.deleteNote.bind(this);
   }
 
   selectTrip(e) {
@@ -59,6 +61,18 @@ export default class App extends React.Component {
     }
   }
 
+  deleteTrip(e) {
+    e.preventDefault();
+    $.ajax({
+      type: 'DELETE',
+      url: `/trips?trip=${this.state.selectedTrip._id}`,
+      success: () => {
+        socket.emit('update');
+        this.getTrips('latest trip, first note');
+      }
+    });
+  }
+
   addNote(e) {
     e.preventDefault();
     let title = prompt('Please enter a title for your note:');
@@ -91,10 +105,22 @@ export default class App extends React.Component {
     });
   }
 
+  deleteNote(e) {
+    e.preventDefault();
+    $.ajax({
+      type: 'DELETE',
+      url: `/notes?trip=${this.state.selectedTrip._id}&note=${this.state.selectedNote._id}`,
+      success: () => {
+        socket.emit('update');
+        this.getTrips('same trip, last note');
+      }
+    });
+  }
+
   getTrips(filter) {
     // check filter valid
     if (!['same trip, same note', 'same trip, last note', 'latest trip, first note'].includes(filter)) throw 'filter not valid';
-    if (this.state.selectedTrip === undefined) filter = 'latest trip, first note';
+    if (this.state.selectedTrip === undefined) filter = 'latest trip, first note'; // handle another client adding trip
     // get trips data to set state
     $.get('/trips', (trips) => {
       // set selectedTrip & selectedNote based on passed-in filter
@@ -106,9 +132,9 @@ export default class App extends React.Component {
           selectedTrip = selectedTripArr[0];
           let selectedNoteArr;
           if (filter === 'same trip, same note') {
-            if (this.state.selectedNote === undefined) {
+            if (this.state.selectedNote === undefined) { // handle another client adding note, or still no notes
               filter = 'same trip, last note';
-            } else {
+            } else { // get same note, or handle another client deleting note
               selectedNoteArr = (selectedTrip.notes.length) ? selectedTrip.notes.filter(note => note._id === this.state.selectedNote._id) : [];
             }
           }
@@ -120,7 +146,7 @@ export default class App extends React.Component {
           } else {
             selectedNote = undefined;
           }
-        } else { // if trip not found, set default selection
+        } else { // handle another client deleting trip
           filter = 'latest trip, first note';
         }
       }
@@ -152,9 +178,9 @@ export default class App extends React.Component {
           <div className={styles.appDescription}>Travel notes</div>
         </div>
         <div className={styles.mainBody}>
-          <Trips trips={this.state.trips} addTrip={this.addTrip} selectTrip={this.selectTrip} selectedTrip={this.state.selectedTrip} />
+          <Trips trips={this.state.trips} addTrip={this.addTrip} deleteTrip={this.deleteTrip} selectTrip={this.selectTrip} selectedTrip={this.state.selectedTrip} />
           <div className={styles.rightSide}>
-            {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} selectNote={this.selectNote} selectedNote={this.state.selectedNote} />}
+            {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} deleteNote={this.deleteNote} selectNote={this.selectNote} selectedNote={this.state.selectedNote} />}
             {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
           </div>
         </div>
