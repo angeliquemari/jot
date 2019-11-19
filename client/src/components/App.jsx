@@ -94,7 +94,7 @@ export default class App extends React.Component {
   getTrips(filter) {
     // check filter valid
     if (!['same trip, same note', 'same trip, last note', 'latest trip, first note'].includes(filter)) throw 'filter not valid';
-    if (this.state.selectedTrip === undefined) filter = 'latest trip, first note'; // to handle another client adding a trip
+    if (this.state.selectedTrip === undefined) filter = 'latest trip, first note';
     // get trips data to set state
     $.get('/trips', (trips) => {
       // set selectedTrip & selectedNote based on passed-in filter
@@ -102,20 +102,23 @@ export default class App extends React.Component {
       let selectedNote;
       if (filter === 'same trip, same note' || filter === 'same trip, last note') {
         let selectedTripArr = trips.filter(trip => trip._id === this.state.selectedTrip._id);
-        if (selectedTripArr.length) { // to handle another client deleting a trip
+        if (selectedTripArr.length) {
           selectedTrip = selectedTripArr[0];
           let selectedNoteArr;
-          if (this.state.selectedNote === undefined) filter = 'same trip, last note'; // to handle another client adding a note
           if (filter === 'same trip, same note') {
-            selectedNoteArr = selectedTrip.notes.filter(note => note._id === this.state.selectedNote._id);
+            if (this.state.selectedNote === undefined) {
+              filter = 'same trip, last note';
+            } else {
+              selectedNoteArr = (selectedTrip.notes.length) ? selectedTrip.notes.filter(note => note._id === this.state.selectedNote._id) : [];
+            }
           }
           if (filter === 'same trip, last note') {
-            selectedNoteArr = selectedTrip.notes[selectedTripArr[0].notes.length - 1];
+            selectedNoteArr = (selectedTrip.notes.length) ? [selectedTrip.notes[selectedTrip.notes.length - 1]] : [];
           }
-          if (selectedNoteArr.length) { // to handle another client deleting a note
+          if (selectedNoteArr.length) {
             selectedNote = selectedNoteArr[0];
-          } else { // if note not found, set default selection
-            filter = 'latest trip, first note';
+          } else {
+            selectedNote = undefined;
           }
         } else { // if trip not found, set default selection
           filter = 'latest trip, first note';
