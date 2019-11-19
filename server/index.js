@@ -83,7 +83,6 @@ io.on('connection', (socket) => {
   console.log('Client connected');
 
   socket.on('update', () => {
-    console.log('Received update signal, broadcasting update signal');
     socket.broadcast.emit('update');
   });
 

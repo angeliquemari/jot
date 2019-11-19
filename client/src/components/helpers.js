@@ -62,6 +62,8 @@ const helpers = {
   updateNote: function(e) {
     e.preventDefault();
     let contents = e.target.value;
+    let cursorPosition = e.target.selectionStart;
+
     $.ajax({
       type: 'PATCH',
       url: `/notes?trip=${this.state.selectedTrip._id}&note=${this.state.selectedNote._id}`,
@@ -69,9 +71,15 @@ const helpers = {
       data: JSON.stringify({contents: contents}),
       success: () => {
         this.state.socket.emit('update');
-        this.getTrips('same trip, same note');
+        this.setState({cursorPosition: cursorPosition}, this.getTrips('same trip, same note'));
       }
     });
+  },
+  setCursorPosition: function() {
+    if (this.state.cursorPosition) {
+      this.noteTextArea.current.selectionStart = this.state.cursorPosition;
+      this.noteTextArea.current.selectionEnd = this.state.cursorPosition;
+    }
   },
   deleteNote: function(e) {
     e.preventDefault();
