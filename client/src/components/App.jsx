@@ -95,7 +95,6 @@ export default class App extends React.Component {
     // check filter valid
     if (!['same trip, same note', 'same trip, last note', 'latest trip, first note'].includes(filter)) throw 'filter not valid';
     if (this.state.selectedTrip === undefined) filter = 'latest trip, first note'; // to handle another client adding a trip
-
     // get trips data to set state
     $.get('/trips', (trips) => {
       // set selectedTrip & selectedNote based on passed-in filter
