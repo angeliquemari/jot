@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './styles/app.css';
-import $ from 'jquery';
 import io from 'socket.io-client';
 import helpers from './helpers.js';
 import Trips from './Trips';
@@ -14,14 +13,17 @@ export default class App extends React.Component {
       trips: [],
       selectedTrip: undefined,
       selectedNote: undefined,
+      cursorPosition: undefined,
       socket: undefined
     };
+    this.noteTextArea = React.createRef();
     this.addTrip = helpers.addTrip.bind(this);
     this.selectTrip = helpers.selectTrip.bind(this);
     this.selectNote = helpers.selectNote.bind(this);
     this.deleteTrip = helpers.deleteTrip.bind(this);
     this.addNote = helpers.addNote.bind(this);
     this.updateNote = helpers.updateNote.bind(this);
+    this.setCursorPosition = helpers.setCursorPosition.bind(this);
     this.deleteNote = helpers.deleteNote.bind(this);
     this.getTrips = helpers.getTrips.bind(this);
   }
@@ -35,7 +37,6 @@ export default class App extends React.Component {
     this.setState({socket: socket}, () => {
       // set up listening for updates
       this.state.socket.on('update', () => {
-        console.log('Received an update signal');
         this.getTrips('same trip, same note');
       });
       // fetch initial data from server and set state
@@ -54,7 +55,7 @@ export default class App extends React.Component {
           <Trips trips={this.state.trips} addTrip={this.addTrip} deleteTrip={this.deleteTrip} selectTrip={this.selectTrip} selectedTrip={this.state.selectedTrip} />
           <div className={styles.rightSide}>
             {this.state.selectedTrip !== undefined && <Notes notes={this.state.selectedTrip.notes} addNote={this.addNote} deleteNote={this.deleteNote} selectNote={this.selectNote} selectedNote={this.state.selectedNote} />}
-            {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note note={this.state.selectedNote} updateNote={this.updateNote} />}
+            {this.state.selectedTrip !== undefined && this.state.selectedNote !== undefined && <Note noteRef={this.noteTextArea} note={this.state.selectedNote} updateNote={this.updateNote} cursorPosition={this.state.cursorPosition} setCursorPosition={this.setCursorPosition} />}
           </div>
         </div>
       </div>
