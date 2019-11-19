@@ -29,6 +29,17 @@ app.post('/trips', (req, res) => {
     });
 });
 
+app.delete('/trips', (req, res) => {
+  db.deleteTrip(req.query.trip)
+    .then(() => {
+      res.end();
+    })
+    .catch((err) =>{
+      console.log('Error:', err);
+      res.status(500).end();
+    });
+});
+
 app.post('/notes', (req, res) => {
   db.createNote(req.query.trip, req.body)
     .then(() => {

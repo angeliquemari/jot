@@ -23,6 +23,10 @@ function createTrip(trip) {
   return Trip.create(trip);
 };
 
+function deleteTrip(tripId) {
+  return Trip.findByIdAndDelete(tripId).exec();
+}
+
 function createNote(tripId, note) {
   return Trip.findByIdAndUpdate(tripId, {$push: {notes: note}}).exec();
 };
@@ -33,5 +37,6 @@ function updateNote(tripId, noteId, note) {
 
 module.exports.getTrips = getTrips;
 module.exports.createTrip = createTrip;
+module.exports.deleteTrip = deleteTrip;
 module.exports.createNote = createNote;
 module.exports.updateNote = updateNote;
