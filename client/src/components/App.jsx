@@ -5,10 +5,7 @@ import io from 'socket.io-client';
 import Trips from './Trips';
 import Notes from './Notes';
 import Note from './Note';
-const socket = io.connect('http://localhost:3000');
-socket.on('connect', () => {
-  console.log('Connected to socket');
-});
+import helpers from './helpers.js';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -16,105 +13,16 @@ export default class App extends React.Component {
     this.state = {
       trips: [],
       selectedTrip: undefined,
-      selectedNote: undefined
+      selectedNote: undefined,
+      socket: undefined
     };
-    this.selectTrip = this.selectTrip.bind(this);
-    this.selectNote = this.selectNote.bind(this);
-    this.addTrip = this.addTrip.bind(this);
-    this.deleteTrip = this.deleteTrip.bind(this);
-    this.addNote = this.addNote.bind(this);
-    this.updateNote = this.updateNote.bind(this);
-    this.deleteNote = this.deleteNote.bind(this);
-  }
-
-  selectTrip(e) {
-    e.preventDefault();
-    let tripId = e.target.getAttribute('tripid');
-    let selectedTrip = this.state.trips.filter(trip => trip._id === tripId)[0];
-    this.setState({
-      selectedTrip: selectedTrip,
-      selectedNote: (selectedTrip.notes.length) ? selectedTrip.notes[0] : undefined
-    });
-  }
-
-  selectNote(e) {
-    e.preventDefault();
-    let noteId = e.target.getAttribute('noteid');
-    let selectedNote = this.state.selectedTrip.notes.filter(note => note._id === noteId)[0];
-    this.setState({selectedNote: selectedNote});
-  }
-  
-  addTrip(e) {
-    e.preventDefault();
-    let tripName = prompt('Please enter a name for your trip:');
-    if (tripName) {
-      $.ajax({
-        type: 'POST',
-        url: '/trips',
-        contentType: 'application/json',
-        data: JSON.stringify({tripName: tripName}),
-        success: () => {
-          socket.emit('update');
-          this.getTrips('latest trip, first note');
-        }
-      });
-    }
-  }
-
-  deleteTrip(e) {
-    e.preventDefault();
-    $.ajax({
-      type: 'DELETE',
-      url: `/trips?trip=${this.state.selectedTrip._id}`,
-      success: () => {
-        socket.emit('update');
-        this.getTrips('latest trip, first note');
-      }
-    });
-  }
-
-  addNote(e) {
-    e.preventDefault();
-    let title = prompt('Please enter a title for your note:');
-    if (title) {
-      $.ajax({
-        type: 'POST',
-        url: `/notes?trip=${this.state.selectedTrip._id}`,
-        contentType: 'application/json',
-        data: JSON.stringify({title: title, contents: ''}),
-        success: () => {
-          socket.emit('update');
-          this.getTrips('same trip, last note');
-        }
-      });
-    }
-  }
-
-  updateNote(e) {
-    e.preventDefault();
-    let contents = e.target.value;
-    $.ajax({
-      type: 'PATCH',
-      url: `/notes?trip=${this.state.selectedTrip._id}&note=${this.state.selectedNote._id}`,
-      contentType: 'application/json',
-      data: JSON.stringify({contents: contents}),
-      success: () => {
-        socket.emit('update');
-        this.getTrips('same trip, same note');
-      }
-    });
-  }
-
-  deleteNote(e) {
-    e.preventDefault();
-    $.ajax({
-      type: 'DELETE',
-      url: `/notes?trip=${this.state.selectedTrip._id}&note=${this.state.selectedNote._id}`,
-      success: () => {
-        socket.emit('update');
-        this.getTrips('same trip, last note');
-      }
-    });
+    this.addTrip = helpers.addTrip.bind(this);
+    this.selectTrip = helpers.selectTrip.bind(this);
+    this.selectNote = helpers.selectNote.bind(this);
+    this.deleteTrip = helpers.deleteTrip.bind(this);
+    this.addNote = helpers.addNote.bind(this);
+    this.updateNote = helpers.updateNote.bind(this);
+    this.deleteNote = helpers.deleteNote.bind(this);
   }
 
   getTrips(filter) {
@@ -163,11 +71,22 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    socket.on('update', () => {
-      console.log('Received an update signal');
-      this.getTrips('same trip, same note');
+    let socket = io.connect('http://localhost:3000');
+    socket.on('connect', () => {
+      console.log('Connected to socket');
     });
-    this.getTrips('latest trip, first note');
+    this.setState({socket: socket}, () => {
+      this.state.socket.on('update', () => {
+        console.log('Received an update signal');
+        this.getTrips('same trip, same note');
+      });
+      this.getTrips('latest trip, first note');
+    });
+    // socket.on('update', () => {
+    //   console.log('Received an update signal');
+    //   this.getTrips('same trip, same note');
+    // });
+    // this.getTrips('latest trip, first note');
   }
 
   render() {
