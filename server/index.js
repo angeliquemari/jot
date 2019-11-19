@@ -51,6 +51,21 @@ app.patch('/notes', (req, res) => {
     });
 });
 
-app.listen(3000, function() {
+const server = app.listen(3000, () => {
   console.log('Server listening on port 3000');
+});
+
+const io = require('socket.io').listen(server);
+
+io.on('connection', (socket) => {
+  console.log('Client connected');
+
+  socket.on('update', () => {
+    console.log('Received update signal, broadcasting update signal');
+    socket.broadcast.emit('update');
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
 });
