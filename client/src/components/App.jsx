@@ -52,7 +52,8 @@ export default class App extends React.Component {
         contentType: 'application/json',
         data: JSON.stringify({tripName: tripName}),
         success: () => {
-          this.getTrips();
+          socket.emit('update');
+          this.getTrips('latest trip, first note');
         }
       });
     }
@@ -68,7 +69,8 @@ export default class App extends React.Component {
         contentType: 'application/json',
         data: JSON.stringify({title: title, contents: ''}),
         success: () => {
-          this.getTrips('last');
+          socket.emit('update');
+          this.getTrips('same trip, last note');
         }
       });
     }
@@ -84,26 +86,47 @@ export default class App extends React.Component {
       data: JSON.stringify({contents: contents}),
       success: () => {
         socket.emit('update');
-        this.getTrips('latest');
+        this.getTrips('same trip, same note');
       }
     });
   }
 
-  getTrips(noteFilter = 'first') {
+  getTrips(filter) {
+    // check filter valid
+    if (!['same trip, same note', 'same trip, last note', 'latest trip, first note'].includes(filter)) throw 'filter not valid';
+
+    // get trips data to set state
     $.get('/trips', (trips) => {
+      // set selectedTrip & selectedNote based on passed-in filter
+      let selectedTrip;
       let selectedNote;
-      if (noteFilter === 'first') {
+      if (filter === 'same trip, same note' || filter === 'same trip, last note') {
+        let selectedTripArr = trips.filter(trip => trip._id === this.state.selectedTrip._id);
+        if (selectedTripArr.length) { // if trip found
+          selectedTrip = selectedTripArr[0];
+          let selectedNoteArr;
+          if (filter === 'same trip, same note') {
+            selectedNoteArr = selectedTrip.notes.filter(note => note._id === this.state.selectedNote._id);
+          }
+          if (filter === 'same trip, last note') {
+            selectedNoteArr = selectedTrip.notes[selectedTripArr[0].notes.length - 1];
+          }
+          if (selectedNoteArr.length) { // if note found
+            selectedNote = selectedNoteArr[0];
+          } else { // if note not found, set default selection
+            filter = 'latest trip, first note';
+          }
+        } else { // if trip not found, set default selection
+          filter = 'latest trip, first note';
+        }
+      }
+      if (filter === 'latest trip, first note') { // default selection
+        selectedTrip = (trips.length) ? trips[0] : undefined;
         selectedNote = (trips.length && trips[0].notes.length) ? trips[0].notes[0] : undefined;
-      }
-      if (noteFilter === 'last') {
-        selectedNote = trips[0].notes[trips[0].notes.length - 1];
-      }
-      if (noteFilter === 'latest') {
-        selectedNote = trips[0].notes.filter(note => note._id === this.state.selectedNote._id)[0];
       }
       this.setState({
         trips: trips,
-        selectedTrip: (trips.length) ? trips[0] : undefined,
+        selectedTrip: selectedTrip,
         selectedNote: selectedNote
       });
     });
@@ -112,9 +135,9 @@ export default class App extends React.Component {
   componentDidMount() {
     socket.on('update', () => {
       console.log('Received an update signal');
-      this.getTrips();
+      this.getTrips('same trip, same note');
     });
-    this.getTrips();
+    this.getTrips('latest trip, first note');
   }
 
   render() {
