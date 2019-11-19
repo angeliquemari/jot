@@ -8,17 +8,14 @@ Lightweight travel notes editor
 
 #### Installation
 
-To run locally after cloning the repo follow steps below:
+To run locally after cloning the repo, follow the steps below:
 
-Install dependencies:
-```npm install```
-
-Compile client app:
-```npm run build```
-
-Build compiled bundle:
-```npm run start```
-
+Install dependencies, compile client app, run server:
+```
+npm install
+npm run build
+npm run start
+```
 Open browser window with URL: `localhost:3000`
 
 #### TO ADD
@@ -28,4 +25,5 @@ Gifs of app in action
 #### Notes
 
 Overview document: [Google doc](https://docs.google.com/document/d/1wy2yiGa_UdJpQOpurr5pL_3hlT14GhL3XpD1PHQtARU)
+
 Project planning and notes: [Gdrive folder](https://drive.google.com/drive/u/0/folders/1Gocq9b9Tv0z5GadKJwHPhG94u6JZS7d4)
