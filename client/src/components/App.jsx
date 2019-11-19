@@ -2,10 +2,10 @@ import React from 'react';
 import styles from './styles/app.css';
 import $ from 'jquery';
 import io from 'socket.io-client';
+import helpers from './helpers.js';
 import Trips from './Trips';
 import Notes from './Notes';
 import Note from './Note';
-import helpers from './helpers.js';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -71,22 +71,20 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    // set up websocket and set state
     let socket = io.connect('http://localhost:3000');
     socket.on('connect', () => {
       console.log('Connected to socket');
     });
     this.setState({socket: socket}, () => {
+      // set up listening for updates
       this.state.socket.on('update', () => {
         console.log('Received an update signal');
         this.getTrips('same trip, same note');
       });
+      // fetch initial data from server and set state
       this.getTrips('latest trip, first note');
     });
-    // socket.on('update', () => {
-    //   console.log('Received an update signal');
-    //   this.getTrips('same trip, same note');
-    // });
-    // this.getTrips('latest trip, first note');
   }
 
   render() {
