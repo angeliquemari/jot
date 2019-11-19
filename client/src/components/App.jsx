@@ -94,6 +94,7 @@ export default class App extends React.Component {
   getTrips(filter) {
     // check filter valid
     if (!['same trip, same note', 'same trip, last note', 'latest trip, first note'].includes(filter)) throw 'filter not valid';
+    if (this.state.selectedTrip === undefined) filter = 'latest trip, first note'; // to handle another client adding a trip
 
     // get trips data to set state
     $.get('/trips', (trips) => {
@@ -102,16 +103,17 @@ export default class App extends React.Component {
       let selectedNote;
       if (filter === 'same trip, same note' || filter === 'same trip, last note') {
         let selectedTripArr = trips.filter(trip => trip._id === this.state.selectedTrip._id);
-        if (selectedTripArr.length) { // if trip found
+        if (selectedTripArr.length) { // to handle another client deleting a trip
           selectedTrip = selectedTripArr[0];
           let selectedNoteArr;
+          if (this.state.selectedNote === undefined) filter = 'same trip, last note'; // to handle another client adding a note
           if (filter === 'same trip, same note') {
             selectedNoteArr = selectedTrip.notes.filter(note => note._id === this.state.selectedNote._id);
           }
           if (filter === 'same trip, last note') {
             selectedNoteArr = selectedTrip.notes[selectedTripArr[0].notes.length - 1];
           }
-          if (selectedNoteArr.length) { // if note found
+          if (selectedNoteArr.length) { // to handle another client deleting a note
             selectedNote = selectedNoteArr[0];
           } else { // if note not found, set default selection
             filter = 'latest trip, first note';
