@@ -1,7 +1,7 @@
 {
   "name": "jot",
   "version": "1.0.0",
-  "description": "Lightweight travel notes editor",
+  "description": "Collaborative travel notes editor",
   "main": "index.js",
   "scripts": {
     "start": "node server/index.js",
