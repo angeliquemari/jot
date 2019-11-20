@@ -107,11 +107,11 @@ const helpers = {
           selectedTrip = selectedTripArr[0];
           let selectedNoteArr;
           if (filter === 'same trip, same note') {
-            if (this.state.selectedNote === undefined) {
+            if (!this.state.selectedNote) {
+              console.log('selectedNote');
               filter = 'same trip, last note';
-            }
-            if (selectedTrip.notes.length) {
-              let selectedNoteArr = selectedTrip.notes.filter(note => note._id === this.state.selectedNote._id);
+            } else if (selectedTrip.notes.length) {
+              selectedNoteArr = selectedTrip.notes.filter(note => note._id === this.state.selectedNote._id);
               if (selectedNoteArr.length) {
                 selectedNote = selectedNoteArr[0]; // same note as before
               } else { // handle another client deleting note
